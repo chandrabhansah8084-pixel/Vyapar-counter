@@ -5,303 +5,1147 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Vyapar Counter — Complete Offline</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#eef3f8;color:#172033}
-button,input,select,textarea{font:inherit}.top{height:56px;background:#123b68;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:20}
-.top b{font-size:19px}.layout{display:flex;min-height:calc(100vh - 56px)}.side{width:215px;background:#fff;border-right:1px solid #d9e0e8;padding:8px;position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;z-index:1000;isolation:isolate}
-.nav{width:100%;border:0;background:#fff;text-align:left;padding:10px;border-radius:7px;margin:2px 0;cursor:pointer;position:relative;z-index:1001;pointer-events:auto;touch-action:manipulation}.nav:hover,.nav.active{background:#e8f1fb;color:#0d5a9d;font-weight:bold}
-.main{flex:1;padding:12px;max-width:1550px;margin:auto;width:100%}.page{display:none}.page.active{display:block}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stat{background:#fff;border-radius:9px;padding:12px;box-shadow:0 2px 8px #0001}.stat small{color:#697589}.stat strong{display:block;font-size:20px;margin-top:4px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.card{background:#fff;border-radius:9px;padding:12px;box-shadow:0 2px 8px #0001;margin-bottom:10px}
-.card h2{font-size:16px;color:#123b68;border-bottom:1px solid #e2e7ed;padding-bottom:6px;margin:0 0 9px}.form{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.field label{font-size:12px;font-weight:bold;display:block;margin-bottom:3px}input,select,textarea{width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;background:#fff}textarea{min-height:60px}.span2{grid-column:span 2}.span4{grid-column:span 4}
-.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}button{border:0;border-radius:6px;padding:8px 11px;cursor:pointer;font-weight:bold}.primary{background:#1267b1;color:#fff}.green{background:#13833b;color:#fff}.red{background:#c62828;color:#fff}.gray{background:#667085;color:#fff}.orange{background:#d47700;color:#fff}
-.tablewrap{overflow:auto}.tbl{width:100%;border-collapse:collapse}.tbl th,.tbl td{border:1px solid #dbe2ea;padding:6px;font-size:12px;text-align:left}.tbl th{background:#edf3f9;white-space:nowrap}
-.total{text-align:right;font-size:18px;font-weight:bold;margin-top:8px}.ok{color:#087a39}.bad{color:#c62828}.small{font-size:11px;color:#667085;margin-top:6px}.warn{background:#fff4d6;padding:8px;border-radius:6px;color:#7a5100}.low{background:#fff0f0;color:#b00020;font-weight:bold}.den{width:100%;border-collapse:collapse}.den th,.den td{border:1px solid #dbe2ea;padding:5px;text-align:center;font-size:12px}.den th{background:#edf3f9}.den input{text-align:center;padding:6px}
-.tag{display:inline-block;padding:3px 7px;border-radius:12px;background:#e8f1fb;font-size:11px}.cashin{color:#087a39;font-weight:bold}.cashout{color:#c62828;font-weight:bold}
-@media(max-width:1050px){.cards{grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:repeat(2,1fr)}.span4{grid-column:span 2}.side{width:185px}}
-@media(max-width:700px){.layout{display:block}.side{position:static;width:100%;height:auto;display:grid;grid-template-columns:repeat(3,1fr)}.cards,.grid2,.grid3{grid-template-columns:1fr}.form{grid-template-columns:1fr}.span2,.span4{grid-column:span 1}.top b{font-size:15px}}
-@media print{.side,.top,.btns,.no-print{display:none!important}.layout,.main{display:block;padding:0}.page{display:none!important}.page.active{display:block!important}.card{box-shadow:none}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#eef3f8;color:#172033}
+button,input,select,textarea{font:inherit}
+.top{height:56px;background:#123b68;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:20}
+.top b{font-size:19px}
+.layout{display:flex;min-height:calc(100vh - 56px)}
+.side{width:215px;background:#fff;border-right:1px solid #d9e0e8;padding:8px;position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;z-index:1000;isolation:isolate}
+.nav{width:100%;border:0;background:#fff;text-align:left;padding:10px;border-radius:7px;margin:2px 0;cursor:pointer;position:relative;z-index:1001;pointer-events:auto;touch-action:manipulation}
+.nav:hover,.nav.active{background:#e8f1fb;color:#0d5a9d;font-weight:bold}
+.main{flex:1;padding:14px;min-width:0}
+.page{display:none}
+.page.active{display:block}
+.card{background:#fff;border:1px solid #d9e0e8;border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 2px 5px #00000008}
+h1,h2,h3{margin-top:0}
+h2{font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:#f7faff;border:1px solid #d9e5f2;border-radius:9px;padding:12px}
+.stat small{display:block;color:#607080}
+.stat strong{font-size:20px;display:block;margin-top:5px}
+input,select,textarea{width:100%;border:1px solid #c8d2de;border-radius:7px;padding:9px;background:#fff}
+textarea{min-height:70px;resize:vertical}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:4px}
+.field{margin-bottom:9px}
+.btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+button{border:0;border-radius:7px;padding:9px 13px;cursor:pointer}
+.primary{background:#1267b1;color:#fff}
+.green{background:#168a45;color:#fff}
+.orange{background:#e58a00;color:#fff}
+.red{background:#c62828;color:#fff}
+.gray{background:#687583;color:#fff}
+table{width:100%;border-collapse:collapse;background:#fff}
+th,td{border:1px solid #d8e0e8;padding:7px;text-align:left;font-size:13px}
+th{background:#edf3f9}
+.right{text-align:right}
+.small{font-size:12px;color:#64748b}
+.total{font-size:21px;font-weight:bold}
+.badge{display:inline-block;padding:4px 8px;border-radius:15px;background:#e8f1fb;color:#1267b1;font-size:12px}
+@media(max-width:900px){
+.layout{display:block}
+.side{width:100%;height:auto;position:relative;top:0;display:flex;flex-wrap:wrap}
+.nav{width:auto;flex:1 1 140px}
+.grid,.cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+.grid,.cards{grid-template-columns:1fr}
+.main{padding:8px}
+}
 </style>
 </head>
 <body>
-<div class="top"><b>🏪 Vyapar Counter — Complete Offline Business Software</b><span id="now"></span></div>
+
+<div class="top">
+<b>💼 Vyapar Counter</b>
+<span id="topDate"></span>
+</div>
+
 <div class="layout">
-<aside class="side">
+
+<div class="side">
 <button class="nav active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
-<button class="nav" onclick="showPage('billing',this)">🧾 Sales / Billing</button>
+<button class="nav" onclick="showPage('sales',this)">🧾 Sales / Billing</button>
 <button class="nav" onclick="showPage('purchase',this)">📦 Purchase</button>
-<button class="nav" onclick="showPage('products',this)">📊 Products / Stock</button>
-<button class="nav" onclick="showPage('parties',this)">👥 Party / Supplier</button>
+<button class="nav" onclick="showPage('products',this)">📋 Products / Stock</button>
+<button class="nav" onclick="showPage('party',this)">👥 Party / Supplier</button>
 <button class="nav" onclick="showPage('denomination',this)">💵 Denomination</button>
 <button class="nav" onclick="showPage('cashbook',this)">💰 Cash Book</button>
 <button class="nav" onclick="showPage('expense',this)">💸 Expense</button>
-<button class="nav" onclick="showPage('reports',this)">📑 Reports</button>
+<button class="nav" onclick="showPage('reports',this)">📊 Reports</button>
 <button class="nav" onclick="showPage('settings',this)">⚙️ Settings</button>
-</aside>
-<main class="main">
+</div>
 
-<section id="dashboard" class="page active">
+<div class="main">
+
+<div id="dashboard" class="page active">
+<div class="card">
+<h2>🏠 Dashboard</h2>
 <div class="cards">
-<div class="stat"><small>Counter Cash</small><strong id="dCash">₹0</strong></div>
-<div class="stat"><small>Today's Sales</small><strong id="dSales">₹0</strong></div>
-<div class="stat"><small>Today's Purchase</small><strong id="dPurchase">₹0</strong></div>
-<div class="stat"><small>Today's Expense</small><strong id="dExpense">₹0</strong></div>
+<div class="stat"><small>Total Sales</small><strong id="dashSales">₹0</strong></div>
+<div class="stat"><small>Total Purchase</small><strong id="dashPurchase">₹0</strong></div>
+<div class="stat"><small>Cash Balance</small><strong id="dashCash">₹0</strong></div>
+<div class="stat"><small>Stock Value</small><strong id="dashStock">₹0</strong></div>
 </div>
-<div class="cards" style="margin-top:9px">
-<div class="stat"><small>Cash IN Today</small><strong id="dIn">₹0</strong></div>
-<div class="stat"><small>Cash OUT Today</small><strong id="dOut">₹0</strong></div>
-<div class="stat"><small>Products</small><strong id="dProducts">0</strong></div>
-<div class="stat"><small>Low Stock</small><strong id="dLow">0</strong></div>
 </div>
-<div class="grid2" style="margin-top:10px">
-<div class="card"><h2>Cash Summary</h2><div id="cashSummary"></div></div>
-<div class="card"><h2>Quick Actions</h2><div class="btns">
-<button class="primary" onclick="showById('billing')">➕ New Bill</button><button class="green" onclick="showById('purchase')">📦 Purchase</button>
-<button class="orange" onclick="showById('expense')">💸 Expense</button><button class="gray" onclick="showById('denomination')">💵 Denomination</button>
-</div></div>
 </div>
-<div class="card"><h2>Low Stock Alert</h2><div class="tablewrap"><table class="tbl"><thead><tr><th>Product</th><th>Current</th><th>Minimum</th><th>Warranty / Note</th></tr></thead><tbody id="lowRows"></tbody></table></div></div>
-<div class="card"><h2>Recent Transactions</h2><div class="tablewrap"><table class="tbl"><thead><tr><th>Date</th><th>Type</th><th>Party</th><th>Amount</th><th>Cash</th></tr></thead><tbody id="recent"></tbody></table></div></div>
-</section>
 
-<section id="billing" class="page">
-<div class="card"><h2>🧾 Sales / Billing</h2>
-<div class="form">
-<div class="field"><label>Bill No.</label><input id="billNo"></div><div class="field"><label>Date</label><input id="saleDate" type="date"></div>
-<div class="field span2"><label>Customer / Party</label><input id="saleParty" list="partyNames"></div>
-<div class="field"><label>Payment Mode</label><select id="saleMode" onchange="paymentModeChanged('sale')"><option>Cash</option><option>UPI</option><option>Credit</option></select></div>
-<div class="field"><label>Discount ₹</label><input id="saleDiscount" type="number" min="0" value="0" oninput="saleTotal()"></div><div class="field"><label>Paid Amount ₹</label><input id="salePaid" type="number" min="0" value="0" oninput="saleTotal()"></div><div class="field"><label>Due Amount</label><input id="saleDue" type="number" readonly value="0"></div>
-</div>
-<datalist id="partyNames"></datalist>
-<h2 style="margin-top:12px">Bill Items</h2>
-<div class="tablewrap"><table class="tbl"><thead><tr><th>Product</th><th>Qty</th><th>Rate</th><th>Amount</th><th>Warranty / Note</th><th></th></tr></thead><tbody id="saleItems"></tbody></table></div>
-<div class="btns"><button class="primary" onclick="addSaleItem()">+ Add Item</button><button class="green" onclick="saveSale()">💾 Save Bill</button><button class="gray" onclick="printCurrentBill()">🖨️ Print Last Bill</button><button class="orange" onclick="clearSale()">New</button></div>
-<div class="total" id="saleGrand">Total: ₹0</div></div>
-<div class="card"><h2>Saved Bills</h2><input id="saleSearch" placeholder="Bill / party search" oninput="renderSales()"><div class="tablewrap"><table class="tbl"><thead><tr><th>Date</th><th>Bill</th><th>Party</th><th>Total</th><th>Mode</th><th>Action</th></tr></thead><tbody id="salesRows"></tbody></table></div></div>
-</section>
+<div id="sales" class="page">
+<div class="card">
+<h2>🧾 Sales / Billing</h2>
 
-<section id="purchase" class="page">
-<div class="card"><h2>📦 Purchase</h2>
-<div class="form">
-<div class="field"><label>Purchase No.</label><input id="purNo"></div><div class="field"><label>Date</label><input id="purDate" type="date"></div>
-<div class="field span2"><label>Supplier</label><input id="purParty" list="supplierNames"></div><div class="field"><label>Payment Mode</label><select id="purMode" onchange="paymentModeChanged('pur')"><option>Cash</option><option>UPI</option><option>Credit</option></select></div>
-<div class="field"><label>Discount ₹</label><input id="purDiscount" type="number" min="0" value="0" oninput="purchaseTotal()"></div><div class="field"><label>Paid Amount ₹</label><input id="purPaid" type="number" min="0" value="0" oninput="purchaseTotal()"></div><div class="field"><label>Due Amount</label><input id="purDue" type="number" readonly value="0"></div>
+<div class="grid">
+<div class="field"><label>Date</label><input id="saleDate" type="date"></div>
+<div class="field"><label>Party Name</label><input id="saleParty"></div>
+<div class="field"><label>Mobile</label><input id="saleMobile"></div>
+<div class="field"><label>Payment Mode</label>
+<select id="salePayment">
+<option value="Cash">Cash</option>
+<option value="UPI">UPI</option>
+<option value="Credit">Credit</option>
+</select>
 </div>
-<datalist id="supplierNames"></datalist>
-<h2 style="margin-top:12px">Purchase Items</h2>
-<div class="tablewrap"><table class="tbl"><thead><tr><th>Product</th><th>Qty</th><th>Rate</th><th>Amount</th><th></th></tr></thead><tbody id="purchaseItems"></tbody></table></div>
-<div class="btns"><button class="primary" onclick="addPurchaseItem()">+ Add Item</button><button class="green" onclick="savePurchase()">💾 Save Purchase</button><button class="orange" onclick="clearPurchase()">New</button></div>
-<div class="total" id="purchaseGrand">Total: ₹0</div>
-<div class="field" style="margin-top:8px"><label>Purchase Notes</label><textarea id="purNotes"></textarea></div>
 </div>
-<div class="card"><h2>Purchase Records</h2><div class="tablewrap"><table class="tbl"><thead><tr><th>Date</th><th>No.</th><th>Supplier</th><th>Amount</th><th>Mode</th><th>Items</th><th>Action</th></tr></thead><tbody id="purRows"></tbody></table></div></div>
-</section>
 
-<section id="products" class="page">
-<div class="card"><h2>📊 Product Master</h2>
-<div class="form">
-<div class="field span2"><label>Product Name *</label><input id="prodName"></div><div class="field"><label>Category</label><input id="prodCat"></div><div class="field"><label>Unit</label><input id="prodUnit" value="PCS"></div>
-<div class="field"><label>Purchase Rate</label><input id="prodBuy" type="number" min="0"></div><div class="field"><label>Sale Rate</label><input id="prodSell" type="number" min="0"></div>
-<div class="field"><label>Opening Stock</label><input id="prodStock" type="number" min="0" value="0"></div><div class="field"><label>Minimum Stock Alert</label><input id="prodMin" type="number" min="0" value="0"></div>
-<div class="field span4"><label>Warranty / Guarantee / Product Note</label><textarea id="prodNote" placeholder="Warranty 1 Year, Guarantee 6 Month, Serial information आदि"></textarea></div>
+<div class="card">
+<table>
+<thead>
+<tr><th>Product</th><th>Qty</th><th>Rate</th><th>Discount</th><th>Amount</th><th></th></tr>
+</thead>
+<tbody id="saleItems"></tbody>
+</table>
+<div class="btns">
+<button class="primary" onclick="addSaleItem()">➕ Add Item</button>
 </div>
-<div class="btns"><button class="green" onclick="saveProduct()">💾 Save / Update Product</button><button class="gray" onclick="clearProduct()">New</button></div>
 </div>
-<div class="card"><h2>➕➖ Stock Plus / Minus</h2><div class="form">
-<div class="field span2"><label>Product *</label><select id="adjProduct"></select></div><div class="field"><label>Action</label><select id="adjAction"><option value="PLUS">➕ Stock Plus</option><option value="MINUS">➖ Stock Minus</option></select></div><div class="field"><label>Quantity *</label><input id="adjQty" type="number" min="1" step="1" value="1"></div>
-<div class="field span2"><label>Reason / Note</label><input id="adjNote" placeholder="Damage, return, manual correction, warranty आदि"></div>
-</div><div class="btns"><button class="primary" onclick="adjustStock()">Update Stock</button></div></div>
-<div class="card"><h2>Stock List</h2><input id="productSearch" placeholder="Product search" oninput="renderProducts()"><div class="tablewrap"><table class="tbl"><thead><tr><th>Product</th><th>Category</th><th>Unit</th><th>Buy</th><th>Sell</th><th>Current</th><th>Min</th><th>Warranty / Note</th><th>Action</th></tr></thead><tbody id="prodRows"></tbody></table></div></div>
-<div class="card"><h2>📋 Stock History</h2><div class="tablewrap"><table class="tbl"><thead><tr><th>Date</th><th>Product</th><th>Action</th><th>Qty</th><th>Before</th><th>After</th><th>Reason</th></tr></thead><tbody id="stockHistoryRows"></tbody></table></div></div>
-</section>
 
-<section id="parties" class="page">
-<div class="card"><h2>👥 Party / Customer / Supplier</h2><div class="form">
-<div class="field span2"><label>Name *</label><input id="partyName"></div><div class="field"><label>Type</label><select id="partyType"><option>Customer</option><option>Supplier</option><option>Both</option></select></div><div class="field"><label>Mobile</label><input id="partyMobile" maxlength="10"></div>
-<div class="field"><label>Village</label><input id="partyVillage"></div><div class="field"><label>Opening Balance</label><input id="partyOpening" type="number" value="0"></div><div class="field span2"><label>Notes</label><input id="partyNotes"></div>
-</div><div class="btns"><button class="green" onclick="saveParty()">💾 Save / Update Party</button><button class="gray" onclick="clearParty()">New</button></div></div>
-<div class="card"><h2>Party List</h2><input id="partySearch" placeholder="Name / mobile / village search" oninput="renderParties()"><div class="tablewrap"><table class="tbl"><thead><tr><th>Name</th><th>Type</th><th>Mobile</th><th>Village</th><th>Opening</th><th>Notes</th><th>Action</th></tr></thead><tbody id="partyRows"></tbody></table></div></div>
-</section>
+<div class="grid">
+<div class="field"><label>Discount</label><input id="saleDiscount" type="number" value="0" oninput="calcSale()"></div>
+<div class="field"><label>Paid Amount</label><input id="salePaid" type="number" value="0" oninput="calcSale()"></div>
+<div class="field"><label>Due Amount</label><input id="saleDue" readonly></div>
+<div class="field"><label>Total</label><input id="saleTotal" readonly></div>
+</div>
 
-<section id="denomination" class="page">
+<div class="btns">
+<button class="green" onclick="saveSale()">💾 Save Bill</button>
+<button class="gray" onclick="clearSale()">Clear</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Saved Bills</h2>
+<div id="salesReview"></div>
+</div>
+</div>
+
+<div id="purchase" class="page">
+<div class="card">
+<h2>📦 Purchase</h2>
+
+<div class="grid">
+<div class="field"><label>Date</label><input id="purDate" type="date"></div>
+<div class="field"><label>Supplier</label><input id="purParty"></div>
+<div class="field"><label>Mobile</label><input id="purMobile"></div>
+<div class="field"><label>Paid Amount</label><input id="purPaid" type="number" value="0" oninput="calcPurchase()"></div>
+</div>
+
+<table>
+<thead>
+<tr><th>Product</th><th>Qty</th><th>Rate</th><th>Discount</th><th>Amount</th><th></th></tr>
+</thead>
+<tbody id="purItems"></tbody>
+</table>
+
+<div class="btns">
+<button class="primary" onclick="addPurchaseItem()">➕ Add Item</button>
+</div>
+
+<div class="grid">
+<div class="field"><label>Discount</label><input id="purDiscount" type="number" value="0" oninput="calcPurchase()"></div>
+<div class="field"><label>Total</label><input id="purTotal" readonly></div>
+<div class="field"><label>Paid</label><input id="purPaid2" readonly></div>
+<div class="field"><label>Due</label><input id="purDue" readonly></div>
+</div>
+
+<div class="btns">
+<button class="green" onclick="savePurchase()">💾 Save Purchase</button>
+<button class="gray" onclick="clearPurchase()">Clear</button>
+</div>
+</div>
+<div class="card">
+<h2>Purchase History</h2>
+<div id="purchaseReview"></div>
+</div>
+</div>
+
+<div id="products" class="page">
+<div class="card">
+<h2>📋 Products / Stock</h2>
+
+<div class="grid">
+<div class="field"><label>Product Name</label><input id="prodName"></div>
+<div class="field"><label>Category</label><input id="prodCategory"></div>
+<div class="field"><label>Unit</label><input id="prodUnit" value="Pcs"></div>
+<div class="field"><label>Buy Rate</label><input id="prodBuy" type="number"></div>
+<div class="field"><label>Sell Rate</label><input id="prodSell" type="number"></div>
+<div class="field"><label>Opening Stock</label><input id="prodStock" type="number"></div>
+<div class="field"><label>Minimum Stock</label><input id="prodMin" type="number"></div>
+<div class="field"><label>Warranty</label><input id="prodWarranty"></div>
+</div>
+<div class="field"><label>Note</label><textarea id="prodNote"></textarea></div>
+
+<div class="btns">
+<button class="green" onclick="saveProduct()">💾 Save Product</button>
+<button class="gray" onclick="clearProduct()">Clear</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Product List</h2>
+<div id="productReview"></div>
+</div>
+</div>
+
+<div id="party" class="page">
+<div class="card">
+<h2>👥 Party / Supplier</h2>
+<div class="grid">
+<div class="field"><label>Name</label><input id="partyName"></div>
+<div class="field"><label>Type</label>
+<select id="partyType"><option>Customer</option><option>Supplier</option></select>
+</div>
+<div class="field"><label>Mobile</label><input id="partyMobile"></div>
+<div class="field"><label>Village</label><input id="partyVillage"></div>
+<div class="field"><label>Opening Balance</label><input id="partyOpening" type="number"></div>
+</div>
+<div class="field"><label>Notes</label><textarea id="partyNotes"></textarea></div>
+<div class="btns">
+<button class="green" onclick="saveParty()">💾 Save Party</button>
+<button class="gray" onclick="clearParty()">Clear</button>
+</div>
+</div>
+<div class="card">
+<h2>Party List</h2>
+<div id="partyReview"></div>
+</div>
+</div>
+
+<div id="denomination" class="page">
+
+<div class="card">
+<h2>💵 Denomination Calculator</h2>
+
+<div class="grid">
+<div class="field"><label>Date</label><input id="dnDate" type="date"></div>
+<div class="field"><label>Party Name</label><input id="dnParty"></div>
+<div class="field"><label>Village</label><input id="dnVillage"></div>
+<div class="field"><label>Mobile</label><input id="dnMobile"></div>
+<div class="field"><label>Aadhaar Last 4</label><input id="dnAadhaar" maxlength="4"></div>
+<div class="field"><label>Account Last 4</label><input id="dnAccount" maxlength="4"></div>
+<div class="field"><label>Reference No.</label><input id="dnRef"></div>
+<div class="field"><label>Transaction Type</label>
+<select id="dnType">
+<option value="">Select</option>
+<option>Cash Withdrawal</option>
+<option>Cash Deposit</option>
+<option>Cash Withdrawal UPI</option>
+<option>Cash Deposit UPI</option>
+</select>
+</div>
+<div class="field"><label>Cash IN / OUT</label>
+<select id="dnFlow">
+<option value="">Select</option>
+<option>IN</option>
+<option>OUT</option>
+</select>
+</div>
+<div class="field"><label>Required Amount</label><input id="dnRequired" type="number" min="0"></div>
+</div>
+
+<div class="card" style="margin-top:10px;border:2px solid #1267b1">
+<h2>📦 Gaddi / Bundle Session</h2>
+<div class="cards" style="grid-template-columns:repeat(3,1fr)">
+<div class="stat"><small>Current Gaddi No.</small><strong id="dnGaddiNo">1</strong></div>
+<div class="stat"><small>Saved Gaddiyan</small><strong id="dnBatchCount">0</strong></div>
+<div class="stat"><small>Combined Total</small><strong id="dnBatchTotal">₹0</strong></div>
+</div>
+<div class="small" id="dnBatchStatus" style="margin-top:8px">
+पहली गड्डी गिनकर Save करें। अगली गड्डी अपने आप नंबर 2 से शुरू होगी।
+</div>
+</div>
+
+<table>
+<thead>
+<tr><th>Note / Coin</th><th>Quantity</th><th>Amount</th></tr>
+</thead>
+<tbody id="dnBody"></tbody>
+</table>
+
+<div class="grid" style="margin-top:10px">
+<div class="field"><label>Notes Used</label><input id="dnNotes" type="number" readonly></div>
+<div class="field"><label>Total Amount</label><input id="dnTotal" readonly></div>
+</div>
+
+<div id="dnStatus" style="margin-top:7px"></div>
+
+<div class="btns">
+<button class="primary" onclick="dnAuto()">⚡ Auto Match</button>
+<button class="gray" onclick="dnClear()">Clear</button>
+<button class="green" onclick="saveDen()">💾 Save Gaddi & Next</button>
+<button class="primary" onclick="showBatchTotal()">📊 Combined Total</button>
+<button class="gray" onclick="printDen()">🖨️ Print</button>
+<button class="orange" onclick="dnNew()">👤 New Person / New Group</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Denomination Review</h2>
+<div id="denReview"></div>
+</div>
+
+</div>
+
+<div id="cashbook" class="page">
+<div class="card">
+<h2>💰 Cash Book</h2>
 <div class="cards">
-<div class="stat"><small>Cash IN</small><strong id="dnIn">₹0</strong></div><div class="stat"><small>Cash OUT</small><strong id="dnOut">₹0</strong></div><div class="stat"><small>Counter Balance</small><strong id="dnBalance">₹0</strong></div><div class="stat"><small>Today's Denomination</small><strong id="dnToday">₹0</strong></div>
+<div class="stat"><small>Cash IN</small><strong id="cashIn">₹0</strong></div>
+<div class="stat"><small>Cash OUT</small><strong id="cashOut">₹0</strong></div>
+<div class="stat"><small>Balance</small><strong id="cashBalance">₹0</strong></div>
 </div>
-<div class="grid2" style="margin-top:10px">
-<div class="card"><h2>💵 Party & Transaction</h2><div class="form">
-<div class="field span2"><label>Party Name *</label><input id="dnParty"></div><div class="field"><label>Village</label><input id="dnVillage"></div><div class="field"><label>Mobile</label><input id="dnMobile" maxlength="10"></div>
-<div class="field"><label>Aadhaar Last 4</label><input id="dnAadhaar" maxlength="4" inputmode="numeric"></div><div class="field"><label>Account Last 4</label><input id="dnAccount" maxlength="4" inputmode="numeric"></div>
-<div class="field"><label>Date</label><input id="dnDate" type="date"></div><div class="field"><label>Reference No.</label><input id="dnRef"></div>
-<div class="field span2"><label>Transaction Type *</label><select id="dnType" onchange="dnTypeChanged()"><option value="">Select</option><option>Cash Withdrawal</option><option>Cash Deposit</option><option>Cash Withdrawal UPI</option><option>Cash Deposit UPI</option></select></div>
-<div class="field"><label>Required Amount ₹ *</label><input id="dnRequired" type="number" min="0" oninput="dnCalc()"></div>
-<div class="field"><label>Cash Effect</label><select id="dnFlow"><option value="">N/A (UPI)</option><option value="IN">⬆️ Cash IN</option><option value="OUT">⬇️ Cash OUT</option></select></div>
-<div class="field span4"><label>Notes / Remarks</label><textarea id="dnNotes"></textarea></div>
-</div></div>
-<div class="card"><h2>🧮 Denomination Calculator</h2><table class="den"><thead><tr><th>Note/Coin</th><th>Quantity</th><th>Amount</th></tr></thead><tbody id="dnBody"></tbody><tfoot><tr><th colspan="2">Grand Total</th><th id="dnGrand">₹0</th></tr></tfoot></table>
-<div id="dnStatus" style="margin-top:7px"></div><div class="btns"><button class="primary" onclick="dnAuto()">⚡ Auto Match</button><button class="gray" onclick="dnClear()">Clear</button><button class="green" onclick="saveDen()">💾 Save Denomination</button><button class="gray" onclick="printDen()">🖨️ Print</button></div></div>
 </div>
-<div class="card"><h2>Saved Denomination — Review</h2><input id="dnSearch" placeholder="Party / village / mobile / Aadhaar / account / reference search" oninput="renderDen()"><div class="tablewrap"><table class="tbl"><thead><tr><th>Date</th><th>Party</th><th>Village</th><th>Mobile</th><th>Aadhaar Last 4</th><th>Account Last 4</th><th>Reference No.</th><th>Transaction</th><th>IN/OUT</th><th>Required</th><th>Total</th><th>Notes Used</th><th>Remarks</th><th>Action</th></tr></thead><tbody id="dnRows"></tbody></table></div></div>
-</section>
+<div class="card">
+<div id="cashReview"></div>
+</div>
+</div>
 
-<section id="cashbook" class="page">
-<div class="cards"><div class="stat"><small>Total Cash IN</small><strong id="cbIn">₹0</strong></div><div class="stat"><small>Total Cash OUT</small><strong id="cbOut">₹0</strong></div><div class="stat"><small>Counter Balance</small><strong id="cbBal">₹0</strong></div><div class="stat"><small>Today's Cash</small><strong id="cbToday">₹0</strong></div></div>
-<div class="card" style="margin-top:10px"><h2>💰 Cash Book</h2><div class="tablewrap"><table class="tbl"><thead><tr><th>Date</th><th>Source</th><th>Party</th><th>IN</th><th>OUT</th><th>Details</th></tr></thead><tbody id="cashRows"></tbody></table></div></div>
-</section>
+<div id="expense" class="page">
+<div class="card">
+<h2>💸 Expense</h2>
+<div class="grid">
+<div class="field"><label>Date</label><input id="expDate" type="date"></div>
+<div class="field"><label>Category</label><input id="expCategory"></div>
+<div class="field"><label>Amount</label><input id="expAmount" type="number"></div>
+<div class="field"><label>Payment</label>
+<select id="expPayment"><option>Cash</option><option>UPI</option></select>
+</div>
+</div>
+<div class="field"><label>Note</label><textarea id="expNote"></textarea></div>
+<div class="btns">
+<button class="green" onclick="saveExpense()">💾 Save Expense</button>
+</div>
+</div>
+<div class="card"><h2>Expense History</h2><div id="expenseReview"></div></div>
+</div>
 
-<section id="expense" class="page">
-<div class="card"><h2>💸 Expense</h2><div class="form"><div class="field"><label>Date</label><input id="exDate" type="date"></div><div class="field"><label>Category</label><input id="exCat"></div><div class="field"><label>Amount ₹</label><input id="exAmount" type="number" min="0"></div><div class="field"><label>Payment</label><select id="exMode"><option>Cash</option><option>UPI</option></select></div><div class="field span4"><label>Notes</label><textarea id="exNotes"></textarea></div></div><div class="btns"><button class="green" onclick="saveExpense()">💾 Save Expense</button></div></div>
-<div class="card"><h2>Expense Records</h2><div class="tablewrap"><table class="tbl"><thead><tr><th>Date</th><th>Category</th><th>Amount</th><th>Mode</th><th>Notes</th><th>Action</th></tr></thead><tbody id="exRows"></tbody></table></div></div>
-</section>
+<div id="reports" class="page">
+<div class="card">
+<h2>📊 Reports</h2>
+<div class="cards">
+<div class="stat"><small>Sales</small><strong id="repSales">₹0</strong></div>
+<div class="stat"><small>Purchase</small><strong id="repPurchase">₹0</strong></div>
+<div class="stat"><small>Expense</small><strong id="repExpense">₹0</strong></div>
+<div class="stat"><small>Net</small><strong id="repNet">₹0</strong></div>
+</div>
+</div>
+</div>
 
-<section id="reports" class="page">
-<div class="card"><h2>📑 Reports</h2><div class="form"><div class="field"><label>From</label><input id="rFrom" type="date"></div><div class="field"><label>To</label><input id="rTo" type="date"></div></div><div class="btns"><button class="primary" onclick="runReport()">Show Report</button><button class="orange" onclick="exportCSV()">Export CSV</button><button class="gray" onclick="window.print()">Print</button></div></div>
-<div class="cards"><div class="stat"><small>Sales</small><strong id="rSales">₹0</strong></div><div class="stat"><small>Purchase</small><strong id="rPurchase">₹0</strong></div><div class="stat"><small>Expense</small><strong id="rExpense">₹0</strong></div><div class="stat"><small>Difference</small><strong id="rDiff">₹0</strong></div></div>
-<div class="card"><h2>Stock Summary</h2><div class="tablewrap"><table class="tbl"><thead><tr><th>Product</th><th>Stock</th><th>Stock Value @ Buy</th><th>Stock Value @ Sale</th><th>Status</th></tr></thead><tbody id="reportStock"></tbody></table></div></div>
-</section>
+<div id="settings" class="page">
+<div class="card">
+<h2>⚙️ Settings</h2>
+<div class="field">
+<label>Current Data Folder</label>
+<input id="dataFolder" readonly>
+</div>
+<div class="btns">
+<button class="primary" onclick="chooseDataFolder()">📁 Data Folder चुनें</button>
+<button class="gray" onclick="openDataFolder()">📂 Folder खोलें</button>
+<button class="green" onclick="backupData()">💾 Backup</button>
+<button class="orange" onclick="restoreData()">♻️ Restore</button>
+</div>
+</div>
+</div>
 
-<section id="settings" class="page">
-<div class="card"><h2>⚙️ Company Settings</h2><div class="form"><div class="field span2"><label>Business / Company Name</label><input id="setCompany"></div><div class="field"><label>Mobile</label><input id="setMobile"></div><div class="field"><label>GSTIN</label><input id="setGstin"></div><div class="field span4"><label>Address</label><textarea id="setAddress"></textarea></div></div><div class="btns"><button class="green" onclick="saveSettings()">💾 Save Settings</button><button class="primary" onclick="backup()">⬇️ Backup JSON</button><label class="gray" style="padding:8px 11px;border-radius:6px;cursor:pointer">⬆️ Restore JSON<input type="file" accept=".json" onchange="restore(event)" style="display:none"></label><button class="red" onclick="resetData()">Delete All Data</button></div></div>
-<div class="card"><h2>Windows Database</h2><div class="small">Windows desktop build में यह app SQLite database के साथ चलता है। <b>Automatic Daily Backup ON</b> — हर दिन software खुलने पर एक backup अपने-आप बनेगा और पुराने automatic backups कभी अपने-आप delete नहीं होंगे।</div><div class="btns"><button class="primary" onclick="desktopBackup()">🗄️ Database Backup</button><button class="gray" onclick="desktopRestore()">🗄️ Database Restore</button><button class="green" onclick="openAutoBackupFolder()">📁 Auto Backup Folder</button></div></div>
-<div class="card"><h2>📂 Data Location</h2><div class="small">आप अपने हिसाब से कोई भी Windows folder चुन सकते हैं। आगे का नया data उसी folder में <b>vyapar.db</b> के रूप में सेव होगा। Folder बदलने पर मौजूदा data सुरक्षित रूप से नए folder में copy किया जाएगा और वहीं से आगे save होगा।</div><div class="form"><div class="field span4"><label>Current Data Folder</label><input id="dataLocation" readonly></div></div><div class="btns"><button class="primary" onclick="chooseDataLocation()">📂 Data Folder चुनें</button><button class="gray" onclick="openDataLocation()">📁 Folder खोलें</button></div></div>
-</section>
-</main></div>
+</div>
+</div>
 
 <script>
-const DEN=[2000,500,200,100,50,20,10,5,2,1],KEY='vyaparCounterDB_v2';
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||{sales:[],purchases:[],products:[],parties:[],den:[],expenses:[],stockHistory:[],settings:{}};
-db.stockHistory=db.stockHistory||[];
+const DEN=[2000,500,200,100,50,20,10,5,2,1];
+
 function $(id){return document.getElementById(id)}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2})}
+function sum(a,f){return a.reduce((s,x)=>s+Number(f(x)||0),0)}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function today(){return new Date().toISOString().slice(0,10)}
-function sum(a,fn){return a.reduce((s,x)=>s+(Number(fn(x))||0),0)}
-function saveDB(){localStorage.setItem(KEY,JSON.stringify(db));refreshAll()}
-let navRefreshTimer=null;
+
+let db={
+sales:[],purchase:[],products:[],parties:[],
+den:[],expense:[]
+};
+
+function loadDB(){
+try{
+let x=localStorage.getItem('vyaparDB');
+if(x)db=Object.assign(db,JSON.parse(x));
+}catch(e){}
+}
+function saveDB(){
+localStorage.setItem('vyaparDB',JSON.stringify(db));
+refreshAll();
+}
+
 function showPage(id,btn){
-  const target=$(id);
-  if(!target)return;
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  target.classList.add('active');
-  document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  // Navigation must remain responsive even if a refresh/render takes time.
-  if(navRefreshTimer)clearTimeout(navRefreshTimer);
-  navRefreshTimer=setTimeout(()=>{try{refreshAll()}catch(e){console.error('Refresh error:',e)}},0);
+document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+let p=$(id);if(p)p.classList.add('active');
+document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+if(btn)btn.classList.add('active');
+setTimeout(()=>refreshAll(),20);
 }
-function showById(id){let b=[...document.querySelectorAll('.nav')].find(x=>x.getAttribute('onclick')?.includes("'"+id+"'"));showPage(id,b)}
-function showById(id){let b=[...document.querySelectorAll('.nav')].find(x=>x.getAttribute('onclick')?.includes("'"+id+"'"));showPage(id,b)}
-function tick(){$('now').textContent=new Date().toLocaleString('en-IN');setTimeout(tick,1000)}
-function cashMovements(){
- let m=[];
- db.den.forEach(x=>{if(x.flow==='IN')m.push({date:x.date,source:'Denomination',party:x.party,inn:x.total,out:0,details:x.transaction});if(x.flow==='OUT')m.push({date:x.date,source:'Denomination',party:x.party,inn:0,out:x.total,details:x.transaction})});
- db.sales.forEach(x=>{if(x.mode==='Cash')m.push({date:x.date,source:'Sales',party:x.party,inn:Number(x.paid??x.total),out:0,details:x.bill})});
- db.purchases.forEach(x=>{if(x.mode==='Cash')m.push({date:x.date,source:'Purchase',party:x.party,inn:0,out:Number(x.paid??x.total),details:x.no})});
- db.expenses.forEach(x=>{if(x.mode==='Cash')m.push({date:x.date,source:'Expense',party:'',inn:0,out:x.amount,details:x.category})});
- return m.sort((a,b)=>b.date.localeCompare(a.date))
+
+function addSaleItem(){
+let tr=document.createElement('tr');
+tr.innerHTML=`
+<td><select class="saleProd">${db.products.map(p=><option value="${esc(p.name)}">${esc(p.name)}</option>).join('')}</select></td>
+<td><input class="saleQty" type="number" min="0" value="1" oninput="calcSale()"></td>
+<td><input class="saleRate" type="number" value="0" oninput="calcSale()"></td>
+<td><input class="saleLineDisc" type="number" value="0" oninput="calcSale()"></td>
+<td class="saleAmt">₹0</td>
+<td><button class="red" onclick="this.closest('tr').remove();calcSale()">✕</button></td>`;
+$('saleItems').appendChild(tr);
+calcSale();
 }
-function counter(){let m=cashMovements();return{inn:sum(m,x=>x.inn),out:sum(m,x=>x.out),bal:sum(m,x=>x.inn)-sum(m,x=>x.out)}}
-function refreshAll(){loadDataLocation();renderDashboard();renderSales();renderPurchases();renderProducts();renderParties();renderDen();renderCash();renderExpenses();renderReportsStock();updateDenCounter();fillSettings();saleTotal();purchaseTotal();refreshDatalists();refreshProductSelects()}
-function renderDashboard(){
- let t=today(),c=counter(),tm=cashMovements().filter(x=>x.date===t);
- $('dCash').textContent=money(c.bal);$('dSales').textContent=money(sum(db.sales.filter(x=>x.date===t),x=>x.total));$('dPurchase').textContent=money(sum(db.purchases.filter(x=>x.date===t),x=>x.total));$('dExpense').textContent=money(sum(db.expenses.filter(x=>x.date===t),x=>x.amount));
- $('dIn').textContent=money(sum(tm,x=>x.inn));$('dOut').textContent=money(sum(tm,x=>x.out));$('dProducts').textContent=db.products.length;
- let low=db.products.filter(p=>Number(p.min||0)>0&&Number(p.stock||0)<=Number(p.min||0));$('dLow').textContent=low.length;
- $('cashSummary').innerHTML=`Total Cash IN: <b>${money(c.inn)}</b><br>Total Cash OUT: <b>${money(c.out)}</b><br><b>Counter Balance: ${money(c.bal)}</b>`;
- $('lowRows').innerHTML=low.map(p=>`<tr><td>${esc(p.name)}</td><td class="low">${p.stock}</td><td>${p.min}</td><td>${esc(p.note||'')}</td></tr>`).join('')||'<tr><td colspan="4">No low stock</td></tr>';
- $('recent').innerHTML=cashMovements().slice(0,12).map(x=>`<tr><td>${x.date}</td><td>${x.source}</td><td>${esc(x.party)}</td><td>${money(x.inn||x.out)}</td><td class="${x.inn?'cashin':'cashout'}">${x.inn?'IN':'OUT'}</td></tr>`).join('')||'<tr><td colspan="5">No transactions</td></tr>';
+
+function calcSale(){
+let total=0;
+document.querySelectorAll('#saleItems tr').forEach(tr=>{
+let q=Number(tr.querySelector('.saleQty')?.value)||0;
+let r=Number(tr.querySelector('.saleRate')?.value)||0;
+let d=Number(tr.querySelector('.saleLineDisc')?.value)||0;
+let a=Math.max(0,q*r-d);
+total+=a;
+let el=tr.querySelector('.saleAmt');if(el)el.textContent=money(a);
+});
+let disc=Number($('saleDiscount')?.value)||0;
+total=Math.max(0,total-disc);
+let paid=Number($('salePaid')?.value)||0;
+$('saleTotal').value=total;
+$('saleDue').value=Math.max(0,total-paid);
 }
-function productOptions(selected=''){return db.products.map(p=>`<option value="${esc(p.id)}" ${p.id===selected?'selected':''}>${esc(p.name)} — Stock ${p.stock}</option>`).join('')||'<option value="">No Product</option>'}
-function addSaleItem(data={}){
- let tr=document.createElement('tr');let p=db.products.find(x=>x.id===data.productId)||db.products[0];
- tr.innerHTML=`<td><select class="siProd" onchange="saleProductChanged(this)">${productOptions(p?.id||'')}</select></td><td><input class="siQty" type="number" min="1" step="1" value="${data.qty||1}" oninput="saleTotal()"></td><td><input class="siRate" type="number" min="0" value="${data.rate??p?.sell??0}" oninput="saleTotal()"></td><td class="siAmt">₹0</td><td class="siNote">${esc(p?.note||'')}</td><td><button class="red" onclick="this.closest('tr').remove();saleTotal()">×</button></td>`;
- $('saleItems').appendChild(tr);saleTotal()
+
+function clearSale(){
+$('saleItems').innerHTML='';
+$('saleParty').value='';
+$('saleMobile').value='';
+$('saleDiscount').value=0;
+$('salePaid').value=0;
+$('saleDate').value=today();
+addSaleItem();
+calcSale();
 }
-function saleProductChanged(sel){let p=db.products.find(x=>x.id===sel.value),r=sel.closest('tr');if(p){r.querySelector('.siRate').value=p.sell||0;r.querySelector('.siNote').textContent=p.note||''}saleTotal()}
-function saleTotal(){let gross=0;document.querySelectorAll('#saleItems tr').forEach(r=>{let q=Number(r.querySelector('.siQty')?.value)||0,rate=Number(r.querySelector('.siRate')?.value)||0,a=q*rate;gross+=a;if(r.querySelector('.siAmt'))r.querySelector('.siAmt').textContent=money(a)});let total=Math.max(0,gross-(Number($('saleDiscount')?.value)||0));let paid=Number($('salePaid')?.value)||0;if(paid>total){paid=total;$('salePaid').value=paid}if($('saleDue'))$('saleDue').value=Math.max(0,total-paid);$('saleGrand').textContent='Total: '+money(total)+' | Paid: '+money(paid)+' | Due: '+money(Math.max(0,total-paid));return total}
-function saleOldQty(old,productId){return sum((old?.items||[]).filter(i=>i.productId===productId),i=>i.qty)}
-function reverseSaleStock(s,reason){(s.items||[]).forEach(it=>{let p=db.products.find(x=>x.id===it.productId);if(p){let before=Number(p.stock)||0;p.stock=before+Number(it.qty);db.stockHistory.unshift({id:String(Date.now()+Math.random()),date:today(),productId:p.id,product:p.name,action:'SALE REVERSAL',qty:it.qty,before,after:p.stock,reason})}})}
-function applySaleStock(items,date,bill){items.forEach(it=>{let p=db.products.find(x=>x.id===it.productId);if(p){let before=Number(p.stock)||0;p.stock=before-it.qty;db.stockHistory.unshift({id:String(Date.now()+Math.random()),date,productId:p.id,product:p.name,action:'SALE',qty:it.qty,before,after:p.stock,reason:'Sales Bill '+bill})}})}
+
 function saveSale(){
- let rows=[...document.querySelectorAll('#saleItems tr')];if(!rows.length){alert('कम से कम एक item जोड़ें।');return}
- let items=rows.map(r=>{let pid=r.querySelector('.siProd').value,p=db.products.find(x=>x.id===pid);return{productId:pid,product:p?.name||'',qty:Number(r.querySelector('.siQty').value)||0,rate:Number(r.querySelector('.siRate').value)||0}}).filter(x=>x.qty>0);
- let discount=Number($('saleDiscount').value)||0,gross=sum(items,x=>x.qty*x.rate),total=Math.max(0,gross-discount),paid=Math.min(total,Math.max(0,Number($('salePaid').value)||0)),due=Math.max(0,total-paid),editId=$('saleId')?.value||'';
- let old=editId?db.sales.find(x=>x.id===editId):null;
- if(!items.length||total<=0){alert('Item और सही amount डालें।');return}
- for(let it of items){let p=db.products.find(x=>x.id===it.productId);let allowed=(Number(p?.stock)||0)+saleOldQty(old,it.productId);if(p&&allowed<it.qty){alert('Stock कम है: '+p.name+' | उपलब्ध '+allowed);return}}
- if(old) reverseSaleStock(old,'Edit Bill '+old.bill);
- let sale={id:old?.id||String(Date.now()),date:$('saleDate').value||today(),bill:$('billNo').value||('B'+Date.now()),party:$('saleParty').value.trim(),mode:$('saleMode').value,total,discount,paid,due,items};
- applySaleStock(items,sale.date,sale.bill);
- if(old){let i=db.sales.findIndex(x=>x.id===editId);db.sales[i]=sale;alert('Bill updated successfully')}else{db.sales.unshift(sale);alert('Bill saved successfully')}
- saveDB();clearSale()
+calcSale();
+let items=[];
+document.querySelectorAll('#saleItems tr').forEach(tr=>{
+let product=tr.querySelector('.saleProd')?.value||'';
+let qty=Number(tr.querySelector('.saleQty')?.value)||0;
+let rate=Number(tr.querySelector('.saleRate')?.value)||0;
+let discount=Number(tr.querySelector('.saleLineDisc')?.value)||0;
+if(product&&qty)items.push({product,qty,rate,discount,amount:Math.max(0,qty*rate-discount)});
+});
+let total=Number($('saleTotal').value)||0;
+if(!items.length||!total){alert('Product और Amount भरें।');return}
+let paid=Number($('salePaid').value)||0;
+db.sales.unshift({
+id:Date.now(),date:$('saleDate').value||today(),
+party:$('saleParty').value,mobile:$('saleMobile').value,
+payment:$('salePayment').value,items,total,paid,
+due:Math.max(0,total-paid),
+discount:Number($('saleDiscount').value)||0
+});
+saveDB();
+alert('Bill Save हो गया।');
+clearSale();
 }
-function paymentModeChanged(kind){let mode=$(kind==='sale'?'saleMode':'purMode').value,total=kind==='sale'?saleTotal():purchaseTotal();let paid=mode==='Credit'?0:total;$(kind==='sale'?'salePaid':'purPaid').value=paid;$(kind==='sale'?'saleDue':'purDue').value=Math.max(0,total-paid);if(kind==='sale')saleTotal();else purchaseTotal()}
-function clearSale(){$('billNo').value='B'+Date.now();$('saleDate').value=today();$('saleParty').value='';$('saleMode').value='Cash';$('saleDiscount').value=0;$('salePaid').value=0;$('saleDue').value=0;if($('saleId'))$('saleId').remove();$('saleItems').innerHTML='';if(db.products.length)addSaleItem();saleTotal()}
-function editSale(id){let s=db.sales.find(x=>x.id===id);if(!s)return;clearSale();let h=document.createElement('input');h.type='hidden';h.id='saleId';h.value=s.id;$('billNo').parentElement.parentElement.appendChild(h);$('billNo').value=s.bill;$('saleDate').value=s.date;$('saleParty').value=s.party||'';$('saleMode').value=s.mode||'Cash';$('saleDiscount').value=s.discount||0;$('salePaid').value=s.paid??((s.mode==='Credit')?0:s.total);$('saleItems').innerHTML='';(s.items||[]).forEach(it=>addSaleItem(it));saleTotal();showById('billing')}
-function renderSales(){let q=($('saleSearch')?.value||'').toLowerCase();$('salesRows').innerHTML=db.sales.filter(x=>(x.bill+' '+x.party).toLowerCase().includes(q)).map(x=>`<tr><td>${x.date}</td><td>${esc(x.bill)}</td><td>${esc(x.party)}</td><td>${money(x.total)}</td><td>${x.mode}</td><td><button class="primary" onclick="editSale('${x.id}')">Edit</button> <button class="gray" onclick="printSale('${x.id}')">Print</button> <button class="red" onclick="deleteSale('${x.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="6">No bills</td></tr>'}
-function printCurrentBill(){if(db.sales[0])printSale(db.sales[0].id);else alert('पहले Bill save करें।')}
-function printSale(id){let s=db.sales.find(x=>x.id===id);if(!s)return;let rows=(s.items||[]).map(it=>{let p=db.products.find(x=>x.id===it.productId);return `<tr><td>${esc(it.product)}</td><td>${it.qty}</td><td>${money(it.rate)}</td><td>${money(it.qty*it.rate)}</td></tr>${p?.note?`<tr><td colspan="4"><small><b>Warranty/Guarantee:</b> ${esc(p.note)}</small></td></tr>`:''}`}).join('');let w=window.open('','_blank','width=850,height=900');w.document.write(`<html><head><title>Invoice ${esc(s.bill)}</title><style>body{font-family:Arial;padding:25px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:8px}.r{text-align:right}</style></head><body><h2>${esc(db.settings.company||'Vyapar Counter')}</h2><p>${esc(db.settings.address||'')}<br>${esc(db.settings.mobile||'')}</p><h3>Sales Invoice</h3><p><b>Bill:</b> ${esc(s.bill)} &nbsp; <b>Date:</b> ${s.date}<br><b>Party:</b> ${esc(s.party)}</p><table><tr><th>Product</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>${rows}</table><h3 class="r">Total: ${money(s.total)}</h3><p class="r"><b>Paid:</b> ${money(s.paid??s.total)} &nbsp; <b>Due:</b> ${money(s.due??Math.max(0,s.total-(s.paid??s.total)))}</p><p><b>Payment:</b> ${esc(s.mode)}</p><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
-function deleteSale(id){let s=db.sales.find(x=>x.id===id);if(!s||!confirm('Bill delete करें? Stock भी वापस जोड़ दिया जाएगा।'))return;reverseSaleStock(s,'Deleted Bill '+s.bill);db.sales=db.sales.filter(x=>x.id!==id);saveDB()}
-function addPurchaseItem(data={}){
- let tr=document.createElement('tr'),p=db.products.find(x=>x.id===data.productId)||db.products[0];
- tr.innerHTML=`<td><select class="piProd" onchange="purchaseProductChanged(this)">${productOptions(p?.id||'')}</select></td><td><input class="piQty" type="number" min="1" step="1" value="${data.qty||1}" oninput="purchaseTotal()"></td><td><input class="piRate" type="number" min="0" value="${data.rate??p?.buy??0}" oninput="purchaseTotal()"></td><td class="piAmt">₹0</td><td><button class="red" onclick="this.closest('tr').remove();purchaseTotal()">×</button></td>`;$('purchaseItems').appendChild(tr);purchaseTotal()
+
+function addPurchaseItem(){
+let tr=document.createElement('tr');
+tr.innerHTML=`
+<td><select class="purProd">${db.products.map(p=><option value="${esc(p.name)}">${esc(p.name)}</option>).join('')}</select></td>
+<td><input class="purQty" type="number" min="0" value="1" oninput="calcPurchase()"></td>
+<td><input class="purRate" type="number" value="0" oninput="calcPurchase()"></td>
+<td><input class="purLineDisc" type="number" value="0" oninput="calcPurchase()"></td>
+<td class="purAmt">₹0</td>
+<td><button class="red" onclick="this.closest('tr').remove();calcPurchase()">✕</button></td>`;
+$('purItems').appendChild(tr);
+calcPurchase();
 }
-function purchaseProductChanged(sel){let p=db.products.find(x=>x.id===sel.value),r=sel.closest('tr');if(p)r.querySelector('.piRate').value=p.buy||0;purchaseTotal()}
-function purchaseTotal(){let gross=0;document.querySelectorAll('#purchaseItems tr').forEach(r=>{let a=(Number(r.querySelector('.piQty')?.value)||0)*(Number(r.querySelector('.piRate')?.value)||0);gross+=a;if(r.querySelector('.piAmt'))r.querySelector('.piAmt').textContent=money(a)});let total=Math.max(0,gross-(Number($('purDiscount')?.value)||0));let paid=Math.min(total,Math.max(0,Number($('purPaid')?.value)||0));if($('purPaid'))$('purPaid').value=paid;if($('purDue'))$('purDue').value=Math.max(0,total-paid);$('purchaseGrand').textContent='Total: '+money(total)+' | Paid: '+money(paid)+' | Due: '+money(Math.max(0,total-paid));return total}
+
+function calcPurchase(){
+let total=0;
+document.querySelectorAll('#purItems tr').forEach(tr=>{
+let q=Number(tr.querySelector('.purQty')?.value)||0;
+let r=Number(tr.querySelector('.purRate')?.value)||0;
+let d=Number(tr.querySelector('.purLineDisc')?.value)||0;
+let a=Math.max(0,q*r-d);total+=a;
+let el=tr.querySelector('.purAmt');if(el)el.textContent=money(a);
+});
+let disc=Number($('purDiscount').value)||0;
+total=Math.max(0,total-disc);
+let paid=Number($('purPaid').value)||0;
+$('purTotal').value=total;
+$('purPaid2').value=paid;
+$('purDue').value=Math.max(0,total-paid);
+}
+
+function clearPurchase(){
+$('purItems').innerHTML='';
+$('purParty').value='';
+$('purMobile').value='';
+$('purDiscount').value=0;
+$('purPaid').value=0;
+$('purDate').value=today();
+addPurchaseItem();
+calcPurchase();
+}
+
 function savePurchase(){
- let rows=[...document.querySelectorAll('#purchaseItems tr')];if(!rows.length){alert('कम से कम एक purchase item जोड़ें।');return}
- let items=rows.map(r=>{let pid=r.querySelector('.piProd').value,p=db.products.find(x=>x.id===pid);return{productId:pid,product:p?.name||'',qty:Number(r.querySelector('.piQty').value)||0,rate:Number(r.querySelector('.piRate').value)||0}}).filter(x=>x.qty>0);
- let discount=Number($('purDiscount').value)||0,total=Math.max(0,sum(items,x=>x.qty*x.rate)-discount),paid=Math.min(total,Math.max(0,Number($('purPaid').value)||0)),due=Math.max(0,total-paid);if(!items.length||total<=0){alert('Purchase amount सही डालें।');return}
- items.forEach(it=>{let p=db.products.find(x=>x.id===it.productId);if(p){let before=Number(p.stock)||0;p.stock=before+it.qty;db.stockHistory.unshift({id:String(Date.now()+Math.random()),date:$('purDate').value||today(),productId:p.id,product:p.name,action:'PURCHASE',qty:it.qty,before,after:p.stock,reason:'Purchase '+($('purNo').value||'')})}});
- db.purchases.unshift({id:String(Date.now()),date:$('purDate').value||today(),no:$('purNo').value||('P'+Date.now()),party:$('purParty').value.trim(),mode:$('purMode').value,total,discount,paid,due,notes:$('purNotes').value,items});saveDB();alert('Purchase saved successfully');clearPurchase()
+calcPurchase();
+let items=[];
+document.querySelectorAll('#purItems tr').forEach(tr=>{
+let product=tr.querySelector('.purProd')?.value||'';
+let qty=Number(tr.querySelector('.purQty')?.value)||0;
+let rate=Number(tr.querySelector('.purRate')?.value)||0;
+let discount=Number(tr.querySelector('.purLineDisc')?.value)||0;
+if(product&&qty)items.push({product,qty,rate,discount,amount:Math.max(0,qty*rate-discount)});
+});
+let total=Number($('purTotal').value)||0;
+if(!items.length||!total){alert('Product और Amount भरें।');return}
+let paid=Number($('purPaid').value)||0;
+db.purchase.unshift({
+id:Date.now(),date:$('purDate').value||today(),
+party:$('purParty').value,mobile:$('purMobile').value,
+items,total,paid,due:Math.max(0,total-paid),
+discount:Number($('purDiscount').value)||0
+});
+saveDB();
+alert('Purchase Save हो गया।');
+clearPurchase();
 }
-function clearPurchase(){$('purNo').value='P'+Date.now();$('purDate').value=today();$('purParty').value='';$('purMode').value='Cash';$('purDiscount').value=0;$('purPaid').value=0;$('purDue').value=0;$('purNotes').value='';$('purchaseItems').innerHTML='';if(db.products.length)addPurchaseItem();purchaseTotal()}
-function renderPurchases(){$('purRows').innerHTML=db.purchases.map(x=>`<tr><td>${x.date}</td><td>${esc(x.no)}</td><td>${esc(x.party)}</td><td>${money(x.total)}</td><td>${x.mode}</td><td>${(x.items||[]).length}</td><td><button class="red" onclick="deletePurchase('${x.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="7">No purchase</td></tr>'}
-function deletePurchase(id){let x=db.purchases.find(p=>p.id===id);if(!x||!confirm('Purchase delete करें? Stock भी घटाया जाएगा।'))return;(x.items||[]).forEach(it=>{let p=db.products.find(x=>x.id===it.productId);if(p){let before=p.stock;p.stock=Math.max(0,Number(p.stock)-Number(it.qty));db.stockHistory.unshift({id:String(Date.now()+Math.random()),date:today(),productId:p.id,product:p.name,action:'PURCHASE REVERSAL',qty:it.qty,before,after:p.stock,reason:'Deleted Purchase '+x.no})}});db.purchases=db.purchases.filter(p=>p.id!==id);saveDB()}
-function saveProduct(){let n=$('prodName').value.trim();if(!n){alert('Product Name डालें');return}let existing=db.products.find(p=>p.id===$('prodId')?.value);let p=existing||{id:String(Date.now()),stock:0};p.name=n;p.cat=$('prodCat').value.trim();p.unit=$('prodUnit').value.trim()||'PCS';p.buy=Number($('prodBuy').value)||0;p.sell=Number($('prodSell').value)||0;p.min=Number($('prodMin').value)||0;p.note=$('prodNote').value.trim();if(!existing){p.stock=Number($('prodStock').value)||0;db.products.push(p);if(p.stock)db.stockHistory.unshift({id:String(Date.now()+Math.random()),date:today(),productId:p.id,product:p.name,action:'OPENING',qty:p.stock,before:0,after:p.stock,reason:'Opening Stock'})}else{let newStock=Number($('prodStock').value)||0;if(newStock!==Number(p.stock)){let before=Number(p.stock);p.stock=newStock;db.stockHistory.unshift({id:String(Date.now()+Math.random()),date:today(),productId:p.id,product:p.name,action:'MASTER EDIT',qty:Math.abs(newStock-before),before,after:newStock,reason:'Product stock edited'})}}saveDB();clearProduct();alert('Product saved')}
-function clearProduct(){if($('prodId'))$('prodId').remove();['prodName','prodCat','prodBuy','prodSell','prodNote'].forEach(id=>$(id).value='');$('prodUnit').value='PCS';$('prodStock').value=0;$('prodMin').value=0}
-function editProduct(id){let p=db.products.find(x=>x.id===id);if(!p)return;clearProduct();let h=document.createElement('input');h.type='hidden';h.id='prodId';h.value=p.id;$('prodName').parentElement.parentElement.appendChild(h);$('prodName').value=p.name;$('prodCat').value=p.cat||'';$('prodUnit').value=p.unit||'PCS';$('prodBuy').value=p.buy||0;$('prodSell').value=p.sell||0;$('prodStock').value=p.stock||0;$('prodMin').value=p.min||0;$('prodNote').value=p.note||'';showById('products')}
-function refreshProductSelects(){if($('adjProduct')){let v=$('adjProduct').value;$('adjProduct').innerHTML=productOptions(v);if(v) $('adjProduct').value=v}}
-function adjustStock(){let p=db.products.find(x=>x.id===$('adjProduct').value),q=Math.floor(Number($('adjQty').value)||0),a=$('adjAction').value;if(!p||q<=0){alert('Product और quantity सही भरें।');return}let before=Number(p.stock)||0,after=a==='PLUS'?before+q:before-q;if(after<0){alert('Current stock '+before+' है। इससे ज्यादा Minus नहीं कर सकते।');return}p.stock=after;db.stockHistory.unshift({id:String(Date.now()),date:today(),productId:p.id,product:p.name,action:a,qty:q,before,after,reason:$('adjNote').value.trim()});saveDB();$('adjQty').value=1;$('adjNote').value='';alert('Stock updated')}
-function renderProducts(){let q=($('productSearch')?.value||'').toLowerCase();$('prodRows').innerHTML=db.products.filter(p=>(p.name+' '+p.cat+' '+p.note).toLowerCase().includes(q)).map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.cat)}</td><td>${esc(p.unit)}</td><td>${money(p.buy)}</td><td>${money(p.sell)}</td><td class="${p.min>0&&p.stock<=p.min?'low':''}">${p.stock}</td><td>${p.min}</td><td>${esc(p.note||'')}</td><td><button class="primary" onclick="editProduct('${p.id}')">Edit</button> <button class="red" onclick="deleteProduct('${p.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="9">No products</td></tr>';$('stockHistoryRows').innerHTML=db.stockHistory.map(x=>`<tr><td>${x.date}</td><td>${esc(x.product)}</td><td>${esc(x.action)}</td><td>${x.qty}</td><td>${x.before}</td><td>${x.after}</td><td>${esc(x.reason||'')}</td></tr>`).join('')||'<tr><td colspan="7">No stock history</td></tr>'}
-function deleteProduct(id){let p=db.products.find(x=>x.id===id);if(!p||!confirm('Product delete करें?'))return;db.products=db.products.filter(x=>x.id!==id);saveDB()}
-function saveParty(){let n=$('partyName').value.trim();if(!n){alert('Name डालें');return}let existing=db.parties.find(p=>p.id===($('partyId')?.value||'')),p=existing||{id:String(Date.now())};Object.assign(p,{name:n,type:$('partyType').value,mobile:$('partyMobile').value,village:$('partyVillage').value,opening:Number($('partyOpening').value)||0,notes:$('partyNotes').value});if(!existing)db.parties.push(p);saveDB();clearParty();alert('Party saved')}
-function clearParty(){if($('partyId'))$('partyId').remove();['partyName','partyMobile','partyVillage','partyNotes'].forEach(id=>$(id).value='');$('partyOpening').value=0}
-function editParty(id){let p=db.parties.find(x=>x.id===id);if(!p)return;clearParty();let h=document.createElement('input');h.type='hidden';h.id='partyId';h.value=p.id;$('partyName').parentElement.parentElement.appendChild(h);$('partyName').value=p.name;$('partyType').value=p.type;$('partyMobile').value=p.mobile||'';$('partyVillage').value=p.village||'';$('partyOpening').value=p.opening||0;$('partyNotes').value=p.notes||'';showById('parties')}
-function renderParties(){let q=($('partySearch')?.value||'').toLowerCase();$('partyRows').innerHTML=db.parties.filter(p=>(p.name+' '+p.mobile+' '+p.village).toLowerCase().includes(q)).map(p=>`<tr><td>${esc(p.name)}</td><td>${p.type}</td><td>${esc(p.mobile)}</td><td>${esc(p.village)}</td><td>${money(p.opening)}</td><td>${esc(p.notes||'')}</td><td><button class="primary" onclick="editParty('${p.id}')">Edit</button> <button class="red" onclick="deleteParty('${p.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="7">No parties</td></tr>'}
-function deleteParty(id){if(confirm('Party delete करें?')){db.parties=db.parties.filter(x=>x.id!==id);saveDB()}}
-function refreshDatalists(){$('partyNames').innerHTML=db.parties.filter(p=>p.type!=='Supplier').map(p=>`<option value="${esc(p.name)}">`).join('');$('supplierNames').innerHTML=db.parties.filter(p=>p.type!=='Customer').map(p=>`<option value="${esc(p.name)}">`).join('')}
-function dnInit(){$('dnBody').innerHTML=DEN.map(d=>`<tr><td><b>₹${d}</b></td><td><input type="number" min="0" step="1" value="0" data-den="${d}" oninput="dnCalc()"></td><td id="dna${d}">₹0</td></tr>`).join('');$('dnDate').value=today();dnClear()}
-function dnGet(){return DEN.map(d=>({den:d,qty:Number(document.querySelector(`[data-den="${d}"]`)?.value)||0})).filter(x=>x.qty)}
-function dnCalc(){let total=0;DEN.forEach(d=>{let q=Number(document.querySelector(`[data-den="${d}"]`)?.value)||0,a=d*q;total+=a;if($('dna'+d))$('dna'+d).textContent=money(a)});let req=Number($('dnRequired').value)||0;$('dnGrand').textContent=money(total);$('dnStatus').innerHTML=!req?'Required Amount भरें।':total===req?'<span class="ok">✅ Exact Match — Amount बराबर है</span>':total<req?'<span class="bad">⚠️ कम: '+money(req-total)+'</span>':'<span class="bad">⚠️ ज्यादा: '+money(total-req)+'</span>'}
-function dnAuto(){let n=Math.floor(Number($('dnRequired').value)||0);if(n<=0){alert('Required Amount डालें');return}dnClear();let left=n;DEN.forEach(d=>{let q=Math.floor(left/d);document.querySelector(`[data-den="${d}"]`).value=q;left-=q*d});dnCalc()}
-function dnClear(){DEN.forEach(d=>{let el=document.querySelector(`[data-den="${d}"]`);if(el)el.value=0});dnCalc()}
-function dnTypeChanged(){let t=$('dnType').value;if(t==='Cash Deposit')$('dnFlow').value='IN';else if(t==='Cash Withdrawal')$('dnFlow').value='OUT';else $('dnFlow').value=''}
-function saveDen(){let req=Number($('dnRequired').value)||0,total=sum(dnGet(),x=>x.den*x.qty);if(!$('dnParty').value.trim()||!$('dnType').value||!req){alert('Party, Transaction Type और Required Amount भरें।');return}if(total!==req){alert('Required Amount और Denomination Total बिल्कुल बराबर होना चाहिए।');return}let type=$('dnType').value,flow=$('dnFlow').value;if((type==='Cash Deposit'||type==='Cash Withdrawal')&&!flow){alert('Cash IN/OUT चुनें।');return}let rec={id:String(Date.now()),date:$('dnDate').value||today(),party:$('dnParty').value.trim(),village:$('dnVillage').value,mobile:$('dnMobile').value,aadhaar:$('dnAadhaar').value,account:$('dnAccount').value,ref:$('dnRef').value,required:req,total,transaction:type,flow,notes:$('dnNotes').value,den:dnGet()};db.den.unshift(rec);saveDB();alert('Denomination saved successfully');dnNew()}
-function dnNew(){['dnParty','dnVillage','dnMobile','dnAadhaar','dnAccount','dnRef','dnRequired','dnNotes'].forEach(id=>$(id).value='');$('dnType').value='';$('dnFlow').value='';dnClear()}
-function updateDenCounter(){let c=counter(),t=today();$('dnIn').textContent=money(c.inn);$('dnOut').textContent=money(c.out);$('dnBalance').textContent=money(c.bal);$('dnToday').textContent=money(sum(db.den.filter(x=>x.date===t),x=>x.total));}
-function renderDen(){let q=($('dnSearch')?.value||'').toLowerCase();$('dnRows').innerHTML=db.den.filter(x=>(x.party+' '+x.village+' '+x.mobile+' '+x.aadhaar+' '+x.account+' '+x.ref).toLowerCase().includes(q)).map(x=>`<tr><td>${x.date}</td><td><b>${esc(x.party)}</b></td><td>${esc(x.village||'')}</td><td>${esc(x.mobile||'')}</td><td>${esc(x.aadhaar||'')}</td><td>${esc(x.account||'')}</td><td>${esc(x.ref||'')}</td><td>${esc(x.transaction)}</td><td class="${x.flow==='IN'?'cashin':x.flow==='OUT'?'cashout':''}">${x.flow||'N/A'}</td><td>${money(x.required)}</td><td>${money(x.total)}</td><td>${x.den.map(d=>'₹'+d.den+' × '+d.qty+' = '+money(d.den*d.qty)).join('<br>')}</td><td>${esc(x.notes||'')}</td><td><button class="gray" onclick="printDenRecord('${x.id}')">Print</button> <button class="red" onclick="deleteDen('${x.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="14">No denomination records</td></tr>'}
-function deleteDen(id){if(confirm('Denomination delete करें?')){db.den=db.den.filter(x=>x.id!==id);saveDB()}}
-function printDen(){let temp=dnGet(),req=Number($('dnRequired').value)||0;let rows=temp.map(x=>`<tr><td>₹${x.den}</td><td>${x.qty}</td><td>${money(x.den*x.qty)}</td></tr>`).join('');let w=window.open('','_blank');w.document.write(`<html><body style="font-family:Arial;padding:20px"><h2>Denomination Review</h2><p>Party: ${esc($('dnParty').value)}<br>Required: ${money(req)}<br>Transaction: ${esc($('dnType').value)}</p><table border="1" cellpadding="7" cellspacing="0"><tr><th>Note</th><th>Qty</th><th>Amount</th></tr>${rows}</table><h3>Total: ${money(sum(temp,x=>x.den*x.qty))}</h3><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
-function printDenRecord(id){let x=db.den.find(d=>d.id===id);if(!x)return;let rows=x.den.map(d=>`<tr><td>₹${d.den}</td><td>${d.qty}</td><td>${money(d.den*d.qty)}</td></tr>`).join('');let w=window.open('','_blank');w.document.write(`<html><body style="font-family:Arial;padding:20px"><h2>Denomination Review</h2><p><b>Party:</b> ${esc(x.party)}<br><b>Village:</b> ${esc(x.village||'')}<br><b>Mobile:</b> ${esc(x.mobile||'')}<br><b>Aadhaar Last 4:</b> ${esc(x.aadhaar||'')}<br><b>Account Last 4:</b> ${esc(x.account||'')}<br><b>Reference No.:</b> ${esc(x.ref||'')}<br><b>Date:</b> ${x.date}<br><b>Transaction:</b> ${esc(x.transaction)}<br><b>Required:</b> ${money(x.required)}</p><table border="1" cellpadding="7" cellspacing="0"><tr><th>Note/Coin</th><th>Qty</th><th>Amount</th></tr>${rows}</table><h3>Total: ${money(x.total)}</h3><p>${esc(x.notes||'')}</p><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
-function renderCash(){let m=cashMovements(),t=today();$('cbIn').textContent=money(sum(m,x=>x.inn));$('cbOut').textContent=money(sum(m,x=>x.out));$('cbBal').textContent=money(counter().bal);$('cbToday').textContent=money(sum(m.filter(x=>x.date===t),x=>x.inn)-sum(m.filter(x=>x.date===t),x=>x.out));$('cashRows').innerHTML=m.map(x=>`<tr><td>${x.date}</td><td>${x.source}</td><td>${esc(x.party)}</td><td class="cashin">${x.inn?money(x.inn):''}</td><td class="cashout">${x.out?money(x.out):''}</td><td>${esc(x.details)}</td></tr>`).join('')||'<tr><td colspan="6">No cash entries</td></tr>'}
-function saveExpense(){let a=Number($('exAmount').value)||0;if(a<=0){alert('Amount डालें');return}db.expenses.unshift({id:String(Date.now()),date:$('exDate').value||today(),category:$('exCat').value.trim(),amount:a,mode:$('exMode').value,notes:$('exNotes').value});saveDB();$('exAmount').value='';$('exCat').value='';$('exNotes').value='';alert('Expense saved')}
-function renderExpenses(){$('exRows').innerHTML=db.expenses.map(x=>`<tr><td>${x.date}</td><td>${esc(x.category)}</td><td>${money(x.amount)}</td><td>${x.mode}</td><td>${esc(x.notes||'')}</td><td><button class="red" onclick="deleteExpense('${x.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="6">No expenses</td></tr>'}
-function deleteExpense(id){if(confirm('Expense delete करें?')){db.expenses=db.expenses.filter(x=>x.id!==id);saveDB()}}
-function runReport(){let f=$('rFrom').value||'0000-00-00',t=$('rTo').value||'9999-99-99',s=db.sales.filter(x=>x.date>=f&&x.date<=t),p=db.purchases.filter(x=>x.date>=f&&x.date<=t),e=db.expenses.filter(x=>x.date>=f&&x.date<=t);$('rSales').textContent=money(sum(s,x=>x.total));$('rPurchase').textContent=money(sum(p,x=>x.total));$('rExpense').textContent=money(sum(e,x=>x.amount));$('rDiff').textContent=money(sum(s,x=>x.total)-sum(p,x=>x.total)-sum(e,x=>x.amount))}
-function renderReportsStock(){$('reportStock').innerHTML=db.products.map(p=>`<tr><td>${esc(p.name)}</td><td>${p.stock}</td><td>${money(p.stock*p.buy)}</td><td>${money(p.stock*p.sell)}</td><td>${p.min>0&&p.stock<=p.min?'<span class="bad">LOW</span>':'OK'}</td></tr>`).join('')||'<tr><td colspan="5">No products</td></tr>'}
-function exportCSV(){let rows=[['Module','Date','Number','Party','Amount','Mode','Details']];db.sales.forEach(x=>rows.push(['Sales',x.date,x.bill,x.party,x.total,x.mode,(x.items||[]).map(i=>i.product+' x '+i.qty).join(' | ')]));db.purchases.forEach(x=>rows.push(['Purchase',x.date,x.no,x.party,x.total,x.mode,(x.items||[]).map(i=>i.product+' x '+i.qty).join(' | ')]));db.expenses.forEach(x=>rows.push(['Expense',x.date,'','',x.amount,x.mode,x.category]));db.den.forEach(x=>rows.push(['Denomination',x.date,'',x.party,x.total,x.transaction,x.den.map(d=>'₹'+d.den+'x'+d.qty).join(' | ')]));let csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\\n'),u=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download='vyapar_counter_export.csv';a.click();URL.revokeObjectURL(u)}
-function saveSettings(){db.settings={company:$('setCompany').value,mobile:$('setMobile').value,gstin:$('setGstin').value,address:$('setAddress').value};saveDB();alert('Settings saved')}
-function fillSettings(){let x=db.settings||{};$('setCompany').value=x.company||'';$('setMobile').value=x.mobile||'';$('setGstin').value=x.gstin||'';$('setAddress').value=x.address||''}
-function backup(){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.href=u;a.download='vyapar_counter_backup_'+today()+'.json';a.click();URL.revokeObjectURL(u)}
-function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.stockHistory=db.stockHistory||[];saveDB();alert('Backup restored successfully')}catch(_){alert('Invalid backup')}};r.readAsText(f)}
-function resetData(){if(confirm('पूरा data delete हो जाएगा। जारी रखें?')){db={sales:[],purchases:[],products:[],parties:[],den:[],expenses:[],stockHistory:[],settings:{}};saveDB();location.reload()}}
-async function desktopBackup(){if(window.vyaparDesktop?.exportDatabase){let p=await window.vyaparDesktop.exportDatabase();if(p)alert('Database backup saved.')}else alert('Windows desktop version में उपलब्ध है।')}
-async function desktopRestore(){if(window.vyaparDesktop?.importDatabase){if(confirm('Database restore करें?')){let ok=await window.vyaparDesktop.importDatabase();if(ok)location.reload()}}else alert('Windows desktop version में उपलब्ध है।')}
-async function openAutoBackupFolder(){if(window.vyaparDesktop?.openBackupFolder){await window.vyaparDesktop.openBackupFolder()}else alert('Windows desktop version में उपलब्ध है।')}
-async function loadDataLocation(){if(window.vyaparDesktop?.getDataLocation){$('dataLocation').value=await window.vyaparDesktop.getDataLocation()}}
-async function chooseDataLocation(){if(!window.vyaparDesktop?.chooseDataLocation){alert('Windows desktop version में उपलब्ध है।');return}let r=await window.vyaparDesktop.chooseDataLocation();if(r?.ok){$('dataLocation').value=r.path;alert('Data folder सफलतापूर्वक बदल गया है। अब नया data इसी folder में save होगा।');}else if(r?.error){alert('Data folder बदल नहीं पाया: '+r.error)}}
-async function openDataLocation(){if(window.vyaparDesktop?.openDataLocation){await window.vyaparDesktop.openDataLocation()}else alert('Windows desktop version में उपलब्ध है।')}
-function init(){dnInit();$('saleDate').value=today();$('purDate').value=today();$('exDate').value=today();$('rFrom').value=today();$('rTo').value=today();clearSale();clearPurchase();tick();refreshAll()}
+
+function saveProduct(){
+let name=$('prodName').value.trim();
+if(!name){alert('Product Name भरें।');return}
+db.products.push({
+id:Date.now(),name,category:$('prodCategory').value,
+unit:$('prodUnit').value,buy:Number($('prodBuy').value)||0,
+sell:Number($('prodSell').value)||0,stock:Number($('prodStock').value)||0,
+min:Number($('prodMin').value)||0,warranty:$('prodWarranty').value,
+note:$('prodNote').value
+});
+saveDB();clearProduct();alert('Product Save हो गया।');
+}
+
+function clearProduct(){
+['prodName','prodCategory','prodBuy','prodSell','prodStock','prodMin','prodWarranty','prodNote'].forEach(x=>$(x).value='');
+$('prodUnit').value='Pcs';
+}
+
+function saveParty(){
+let name=$('partyName').value.trim();
+if(!name){alert('Party Name भरें।');return}
+db.parties.push({
+id:Date.now(),name,type:$('partyType').value,
+mobile:$('partyMobile').value,village:$('partyVillage').value,
+opening:Number($('partyOpening').value)||0,notes:$('partyNotes').value
+});
+saveDB();clearParty();alert('Party Save हो गई।');
+}
+
+function clearParty(){
+['partyName','partyMobile','partyVillage','partyOpening','partyNotes'].forEach(x=>$(x).value='');
+}
+
+function saveExpense(){
+let amount=Number($('expAmount').value)||0;
+if(!amount){alert('Amount भरें।');return}
+db.expense.unshift({
+id:Date.now(),date:$('expDate').value||today(),
+category:$('expCategory').value,amount,
+payment:$('expPayment').value,note:$('expNote').value
+});
+saveDB();
+$('expAmount').value='';
+$('expCategory').value='';
+$('expNote').value='';
+alert('Expense Save हो गया।');
+}
+
+/* DENOMINATION */
+let dnBatchId=null;
+let dnGaddiNo=1;
+
+function dnCurrentBatch(){
+return dnBatchId?
+db.den.filter(x=>x.batchId===dnBatchId)
+.sort((a,b)=>(a.gaddiNo||0)-(b.gaddiNo||0)):[]}
+function updateDnBatchSummary(){
+let a=dnCurrentBatch(),
+count=a.length,
+total=sum(a,x=>Number(x.total)||0),
+pieces=sum(a,x=>sum(x.den||[],d=>Number(d.qty)||0));
+if($('dnGaddiNo'))$('dnGaddiNo').textContent=dnGaddiNo;
+if($('dnBatchCount'))$('dnBatchCount').textContent=count;
+if($('dnBatchTotal'))$('dnBatchTotal').textContent=money(total);
+if($('dnBatchStatus'))$('dnBatchStatus').innerHTML=count?
+इस समूह में <b>${count}</b> गड्डी सेव हो चुकी हैं। कुल रकम <b>${money(total)}</b> और कुल नोट/सिक्के <b>${pieces}</b> हैं।:
+'पहली गड्डी गिनकर Save करें। अगली गड्डी अपने आप नंबर 2 से शुरू होगी।';
+}
+
+function dnGet(){
+return [...document.querySelectorAll('#dnBody input[data-den]')]
+.map(i=>({den:Number(i.dataset.den),qty:Number(i.value)||0}))
+.filter(x=>x.qty);
+}
+
+function dnCalc(){
+let a=dnGet();
+let total=sum(a,x=>x.den*x.qty);
+let pieces=sum(a,x=>x.qty);
+$('dnTotal').value=total;
+$('dnNotes').value=pieces;
+DEN.forEach(d=>{
+let i=document.querySelector(#dnBody input[data-den="${d}"]);
+let out=$(dna${d});
+if(i&&out)out.textContent=money(d*(Number(i.value)||0));
+});
+let req=Number($('dnRequired').value)||0;
+if(req&&total===req){
+$('dnStatus').innerHTML='<span class="badge">✅ Required Amount Match</span>';
+}else if(req){
+$('dnStatus').innerHTML=<span class="badge">Difference: ${money(req-total)}</span>;
+}else $('dnStatus').innerHTML='';
+}
+
+function dnClear(){
+document.querySelectorAll('#dnBody input[data-den]').forEach(i=>i.value=0);
+dnCalc();
+}
+
+function dnAuto(){
+let req=Number($('dnRequired').value)||0;
+if(!req){alert('पहले Required Amount भरें।');return}
+dnClear();
+let rem=req;
+for(let d of DEN){
+let q=Math.floor(rem/d);
+if(q>0){
+let i=document.querySelector(#dnBody input[data-den="${d}"]);
+if(i)i.value=q;
+rem-=q*d;
+}
+}
+dnCalc();
+if(rem)alert('इस amount का exact denomination match नहीं बन पाया।');
+}
+
+function dnBatchTotals(){
+let a=dnCurrentBatch(),map={};
+a.forEach(x=>(x.den||[]).forEach(d=>{
+map[d.den]=(map[d.den]||0)+(Number(d.qty)||0)
+}));
+return DEN.map(d=>({
+den:d,qty:map[d]||0,amount:d*(map[d]||0)
+})).filter(x=>x.qty)
+}
+
+function showBatchTotal(){
+let a=dnCurrentBatch();
+if(!a.length){
+alert('अभी कोई गड्डी सेव नहीं हुई है। पहले पहली गड्डी Save करें।');
+return
+}
+let totals=dnBatchTotals(),
+count=a.length,
+total=sum(a,x=>Number(x.total)||0),
+pieces=sum(totals,x=>x.qty);
+let rows=totals.map(x=>`
+<tr>
+<td>₹${x.den}</td>
+<td>${x.qty}</td>
+<td>${money(x.amount)}</td>
+</tr>`).join('');
+let w=window.open('','_blank','width=850,height=900');
+if(!w){alert('Print/Popup अनुमति दें।');return}
+w.document.write(`
+<html><body style="font-family:Arial;padding:20px">
+<h2>📦 Combined Denomination Total</h2>
+<p>
+<b>Party:</b> ${esc(a[0].party)}<br>
+<b>Date:</b> ${esc(a[0].date)}<br>
+<b>Gaddiyan:</b> ${count}
+</p>
+<table border="1" cellpadding="7" cellspacing="0" style="width:100%;border-collapse:collapse">
+<tr><th>Note/Coin</th><th>Total Qty</th><th>Total Amount</th></tr>
+${rows}
+</table>
+<h3>Total Pieces: ${pieces}</h3>
+<h2>Combined Grand Total: ${money(total)}</h2>
+<script>window.onload=()=>window.print()<\/script>
+</body></html>`);
+w.document.close()
+}
+
+function dnInit(){
+dnBatchId=null;
+dnGaddiNo=1;
+$('dnBody').innerHTML=DEN.map(d=>`
+<tr>
+<td><b>₹${d}</b></td>
+<td>
+<input type="number" min="0" step="1" value="0"
+data-den="${d}" oninput="dnCalc()">
+</td>
+<td id="dna${d}">₹0</td>
+</tr>`).join('');
+$('dnDate').value=today();
+dnClear();
+updateDnBatchSummary();
+}
+
+function saveDen(){
+let req=Number($('dnRequired').value)||0;
+let total=sum(dnGet(),x=>x.den*x.qty);
+
+if(!$('dnParty').value.trim()||!$('dnType').value||!req){
+alert('Party, Transaction Type और Required Amount भरें।');
+return
+}
+
+if(total!==req){
+alert('Required Amount और Denomination Total बिल्कुल बराबर होना चाहिए।');
+return
+}
+
+let type=$('dnType').value,
+flow=$('dnFlow').value;
+
+if((type==='Cash Deposit'||type==='Cash Withdrawal')&&!flow){
+alert('Cash IN/OUT चुनें।');
+return
+}
+
+if(!dnBatchId)dnBatchId='B'+Date.now();
+
+let rec={
+id:String(Date.now())+'-'+Math.random().toString(36).slice(2,7),
+batchId:dnBatchId,
+gaddiNo:dnGaddiNo,
+date:$('dnDate').value||today(),
+party:$('dnParty').value.trim(),
+village:$('dnVillage').value,
+mobile:$('dnMobile').value,
+aadhaar:$('dnAadhaar').value,
+account:$('dnAccount').value,
+ref:$('dnRef').value,
+required:req,
+total,
+transaction:type,
+flow,
+notes:$('dnNotes').value,
+den:dnGet()
+};
+
+db.den.unshift(rec);
+saveDB();
+
+dnGaddiNo++;
+dnClear();
+$('dnRequired').value='';
+$('dnNotes').value='';
+updateDnBatchSummary();
+renderDen();
+updateDenCounter();
+
+alert('गड्डी '+rec.gaddiNo+' सेव हो गई। अब अगली गड्डी नंबर '+dnGaddiNo+' गिनें।');
+}
+
+function dnNew(){
+dnBatchId=null;
+dnGaddiNo=1;
+['dnParty','dnVillage','dnMobile','dnAadhaar','dnAccount','dnRef','dnRequired','dnNotes']
+.forEach(id=>$(id).value='');
+$('dnType').value='';
+$('dnFlow').value='';
+dnClear();
+updateDnBatchSummary();
+}
+
+/* RENDER */
+function renderProducts(){
+let h=<table><tr><th>Name</th><th>Category</th><th>Unit</th><th>Buy</th><th>Sell</th><th>Stock</th><th>Min</th><th>Action</th></tr>;
+db.products.forEach(p=>{
+h+=`<tr>
+<td>${esc(p.name)}</td>
+<td>${esc(p.category)}</td>
+<td>${esc(p.unit)}</td>
+<td>${money(p.buy)}</td>
+<td>${money(p.sell)}</td>
+<td>${p.stock}</td>
+<td>${p.min}</td>
+<td><button class="red" onclick="deleteProduct(${p.id})">Delete</button></td>
+</tr>`;
+});
+h+='</table>';
+$('productReview').innerHTML=h;
+}
+
+function deleteProduct(id){
+if(!confirm('Product delete करें?'))return;
+db.products=db.products.filter(x=>x.id!==id);
+saveDB();
+}
+
+function renderParties(){
+let h=<table><tr><th>Name</th><th>Type</th><th>Mobile</th><th>Village</th><th>Opening</th><th>Notes</th><th>Action</th></tr>;
+db.parties.forEach(p=>{
+h+=`<tr>
+<td>${esc(p.name)}</td>
+<td>${esc(p.type)}</td>
+<td>${esc(p.mobile)}</td>
+<td>${esc(p.village)}</td>
+<td>${money(p.opening)}</td>
+<td>${esc(p.notes)}</td>
+<td><button class="red" onclick="deleteParty(${p.id})">Delete</button></td>
+</tr>`;
+});
+h+='</table>';
+$('partyReview').innerHTML=h;
+}
+
+function deleteParty(id){
+if(!confirm('Party delete करें?'))return;
+db.parties=db.parties.filter(x=>x.id!==id);
+saveDB();
+}
+
+function renderSales(){
+let h=`<table><tr>
+<th>Date</th><th>Party</th><th>Total</th><th>Paid</th><th>Due</th><th>Payment</th><th>Action</th>
+</tr>`;
+db.sales.forEach(x=>{
+h+=`<tr>
+<td>${esc(x.date)}</td>
+<td>${esc(x.party)}</td>
+<td>${money(x.total)}</td>
+<td>${money(x.paid)}</td>
+<td>${money(x.due)}</td>
+<td>${esc(x.payment)}</td>
+<td><button class="red" onclick="deleteSale(${x.id})">Delete</button></td>
+</tr>`;
+});
+h+='</table>';
+$('salesReview').innerHTML=h;
+}
+
+function deleteSale(id){
+if(!confirm('Bill delete करें?'))return;
+db.sales=db.sales.filter(x=>x.id!==id);
+saveDB();
+}
+
+function renderPurchase(){
+let h=`<table><tr>
+<th>Date</th><th>Supplier</th><th>Total</th><th>Paid</th><th>Due</th><th>Action</th>
+</tr>`;
+db.purchase.forEach(x=>{
+h+=`<tr>
+<td>${esc(x.date)}</td>
+<td>${esc(x.party)}</td>
+<td>${money(x.total)}</td>
+<td>${money(x.paid)}</td>
+<td>${money(x.due)}</td>
+<td><button class="red" onclick="deletePurchase(${x.id})">Delete</button></td>
+</tr>`;
+});
+h+='</table>';
+$('purchaseReview').innerHTML=h;
+}
+
+function deletePurchase(id){
+if(!confirm('Purchase delete करें?'))return;
+db.purchase=db.purchase.filter(x=>x.id!==id);
+saveDB();
+}
+
+function renderExpense(){
+let h=<table><tr><th>Date</th><th>Category</th><th>Amount</th><th>Payment</th><th>Note</th><th>Action</th></tr>;
+db.expense.forEach(x=>{
+h+=`<tr>
+<td>${esc(x.date)}</td>
+<td>${esc(x.category)}</td>
+<td>${money(x.amount)}</td>
+<td>${esc(x.payment)}</td>
+<td>${esc(x.note)}</td>
+<td><button class="red" onclick="deleteExpense(${x.id})">Delete</button></td>
+</tr>`;
+});
+h+='</table>';
+$('expenseReview').innerHTML=h;
+}
+
+function deleteExpense(id){
+if(!confirm('Expense delete करें?'))return;
+db.expense=db.expense.filter(x=>x.id!==id);
+saveDB();
+}
+
+function renderDen(){
+let h=`<table>
+<tr>
+<th>Date</th>
+<th>Gaddi No.</th>
+<th>Party</th>
+<th>Village</th>
+<th>Mobile</th>
+<th>Aadhaar Last 4</th>
+<th>Account Last 4</th>
+<th>Reference No.</th>
+<th>Transaction</th>
+<th>IN/OUT</th>
+<th>Required</th>
+<th>Total</th>
+<th>Notes Used</th>
+<th>Remarks</th>
+<th>Action</th>
+</tr>`;
+
+db.den.forEach(x=>{
+let notes=sum(x.den||[],d=>d.qty);
+let denText=(x.den||[]).map(d=>₹${d.den} × ${d.qty}).join(', ');
+h+=`<tr>
+<td>${esc(x.date)}</td>
+<td>${x.gaddiNo||1}</td>
+<td>${esc(x.party)}</td>
+<td>${esc(x.village)}</td>
+<td>${esc(x.mobile)}</td>
+<td>${esc(x.aadhaar)}</td>
+<td>${esc(x.account)}</td>
+<td>${esc(x.ref)}</td>
+<td>${esc(x.transaction)}</td>
+<td>${esc(x.flow)}</td>
+<td>${money(x.required)}</td>
+<td>${money(x.total)}</td>
+<td>${notes}<br><span class="small">${esc(denText)}</span></td>
+<td>${esc(x.notes)}</td>
+<td>
+<button class="red" onclick="deleteDen('${esc(x.id)}')">Delete</button>
+</td>
+</tr>`;
+});
+
+h+='</table>';
+$('denReview').innerHTML=h;
+}
+
+function deleteDen(id){
+if(!confirm('यह denomination record delete करें?'))return;
+let rec=db.den.find(x=>x.id===id);
+db.den=db.den.filter(x=>x.id!==id);
+
+if(rec&&rec.batchId===dnBatchId){
+let a=dnCurrentBatch();
+dnGaddiNo=a.length+1;
+updateDnBatchSummary();
+}
+saveDB();
+}
+
+function updateDenCounter(){
+updateDnBatchSummary();
+}
+
+function printDen(){
+let a=dnGet();
+let total=sum(a,x=>x.den*x.qty);
+let w=window.open('','_blank','width=800,height=900');
+if(!w){alert('Popup अनुमति दें।');return}
+
+let rows=a.map(x=>`
+<tr><td>₹${x.den}</td><td>${x.qty}</td><td>${money(x.den*x.qty)}</td></tr>
+`).join('');
+
+w.document.write(`
+<html><body style="font-family:Arial;padding:20px">
+<h2>Denomination Slip</h2>
+<p>
+<b>Date:</b> ${esc($('dnDate').value)}<br>
+<b>Party:</b> ${esc($('dnParty').value)}<br>
+<b>Village:</b> ${esc($('dnVillage').value)}<br>
+<b>Mobile:</b> ${esc($('dnMobile').value)}<br>
+<b>Aadhaar Last 4:</b> ${esc($('dnAadhaar').value)}<br>
+<b>Account Last 4:</b> ${esc($('dnAccount').value)}<br>
+<b>Reference:</b> ${esc($('dnRef').value)}<br>
+<b>Transaction:</b> ${esc($('dnType').value)}<br>
+<b>Gaddi No.:</b> ${dnGaddiNo}
+</p>
+<table border="1" cellpadding="7" cellspacing="0" style="width:100%;border-collapse:collapse">
+<tr><th>Note/Coin</th><th>Qty</th><th>Amount</th></tr>
+${rows}
+</table>
+<h2>Total: ${money(total)}</h2>
+<script>window.onload=()=>window.print()<\/script>
+</body></html>`);
+w.document.close();
+}
+
+/* CASH BOOK */
+function renderCash(){
+let salesCash=sum(db.sales,x=>x.payment==='Cash'?x.paid:0);
+let purCash=sum(db.purchase,x=>x.paid);
+let expCash=sum(db.expense,x=>x.payment==='Cash'?x.amount:0);
+
+let denIn=sum(db.den,x=>(x.flow==='IN'||x.transaction==='Cash Deposit')?x.total:0);
+let denOut=sum(db.den,x=>(x.flow==='OUT'||x.transaction==='Cash Withdrawal')?x.total:0);
+
+let cashIn=salesCash+denIn;
+let cashOut=purCash+expCash+denOut;
+let bal=cashIn-cashOut;
+
+$('cashIn').textContent=money(cashIn);
+$('cashOut').textContent=money(cashOut);
+$('cashBalance').textContent=money(bal);
+
+let h=<table><tr><th>Type</th><th>Details</th><th>IN</th><th>OUT</th></tr>;
+db.sales.filter(x=>x.payment==='Cash'&&x.paid).forEach(x=>{
+h+=<tr><td>Sale</td><td>${esc(x.party)}</td><td>${money(x.paid)}</td><td>₹0</td></tr>;
+});
+db.purchase.filter(x=>x.paid).forEach(x=>{
+h+=<tr><td>Purchase</td><td>${esc(x.party)}</td><td>₹0</td><td>${money(x.paid)}</td></tr>;
+});
+db.expense.filter(x=>x.payment==='Cash').forEach(x=>{
+h+=<tr><td>Expense</td><td>${esc(x.category)}</td><td>₹0</td><td>${money(x.amount)}</td></tr>;
+});
+db.den.forEach(x=>{
+let inn=(x.flow==='IN'||x.transaction==='Cash Deposit')?x.total:0;
+let out=(x.flow==='OUT'||x.transaction==='Cash Withdrawal')?x.total:0;
+if(inn||out)h+=<tr><td>Denomination</td><td>${esc(x.party)}</td><td>${money(inn)}</td><td>${money(out)}</td></tr>;
+});
+h+='</table>';
+$('cashReview').innerHTML=h;
+}
+
+/* DASHBOARD / REPORTS */
+function refreshDashboard(){
+let sales=sum(db.sales,x=>x.total);
+let purchase=sum(db.purchase,x=>x.total);
+let expense=sum(db.expense,x=>x.amount);
+let stock=sum(db.products,x=>(Number(x.stock)||0)*(Number(x.buy)||0));
+
+let cashSales=sum(db.sales,x=>x.payment==='Cash'?x.paid:0);
+let cashPurchase=sum(db.purchase,x=>x.paid);
+let cashExpense=sum(db.expense,x=>x.payment==='Cash'?x.amount:0);
+let cashDenIn=sum(db.den,x=>(x.flow==='IN'||x.transaction==='Cash Deposit')?x.total:0);
+let cashDenOut=sum(db.den,x=>(x.flow==='OUT'||x.transaction==='Cash Withdrawal')?x.total:0);
+
+let cash=cashSales+cashDenIn-cashPurchase-cashExpense-cashDenOut;
+
+$('dashSales').textContent=money(sales);
+$('dashPurchase').textContent=money(purchase);
+$('dashCash').textContent=money(cash);
+$('dashStock').textContent=money(stock);
+
+$('repSales').textContent=money(sales);
+$('repPurchase').textContent=money(purchase);
+$('repExpense').textContent=money(expense);
+$('repNet').textContent=money(sales-purchase-expense);
+}
+
+/* DATA LOCATION */
+async function chooseDataFolder(){
+if(window.electronAPI&&window.electronAPI.chooseDataFolder){
+try{
+let r=await window.electronAPI.chooseDataFolder();
+if(r)location.reload();
+}catch(e){alert('Data Folder बदलने में समस्या: '+e.message)}
+}else{
+alert('Data Folder सुविधा केवल Windows Software में उपलब्ध है।');
+}
+}
+
+async function openDataFolder(){
+if(window.electronAPI&&window.electronAPI.openDataFolder){
+try{await window.electronAPI.openDataFolder()}catch(e){}
+}else alert('यह सुविधा Windows Software में उपलब्ध है।');
+}
+
+async function backupData(){
+if(window.electronAPI&&window.electronAPI.backupData){
+try{
+let r=await window.electronAPI.backupData();
+alert(r?.message||'Backup हो गया।');
+}catch(e){alert('Backup error: '+e.message)}
+}else{
+localStorage.setItem('vyapar_manual_backup',JSON.stringify(db));
+alert('Backup browser storage में हो गया।');
+}
+}
+
+async function restoreData(){
+if(window.electronAPI&&window.electronAPI.restoreData){
+try{
+let r=await window.electronAPI.restoreData();
+if(r?.ok)location.reload();
+else if(r?.message)alert(r.message);
+}catch(e){alert('Restore error: '+e.message)}
+}else{
+let x=localStorage.getItem('vyapar_manual_backup');
+if(!x){alert('Backup नहीं मिला।');return}
+if(confirm('Backup restore करें?')){
+db=JSON.parse(x);saveDB();location.reload();
+}
+}
+}
+
+/* REFRESH */
+function refreshAll(){
+renderProducts();
+renderParties();
+renderSales();
+renderPurchase();
+renderExpense();
+renderDen();
+renderCash();
+refreshDashboard();
+updateDnBatchSummary();
+
+if($('dataFolder')&&window.electronAPI&&window.electronAPI.getDataFolder){
+window.electronAPI.getDataFolder().then(x=>{
+$('dataFolder').value=x||'';
+}).catch(()=>{});
+}
+}
+
+function init(){
+loadDB();
+
+$('topDate').textContent=new Date().toLocaleDateString('en-IN');
+
+['saleDate','purDate','dnDate','expDate'].forEach(id=>{
+if($(id))$(id).value=today();
+});
+
+dnInit();
+
+if(!$('saleItems').children.length)addSaleItem();
+if(!$('purItems').children.length)addPurchaseItem();
+
+refreshAll();
+}
+
 init();
 </script>
-</body></html>
+
+</body>
+</html>
